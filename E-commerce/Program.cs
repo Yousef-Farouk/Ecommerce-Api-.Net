@@ -1,7 +1,10 @@
 
+using CloudinaryDotNet;
 using E_commerce.Models;
+using E_commerce.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace E_commerce
 {
@@ -27,6 +30,13 @@ namespace E_commerce
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<Cloudinary>((provider) =>
+            {
+                Account acc = new Account("dctoktk1l", "416939737679971", "00P1jdEAfUPz3AML6MDCd8Ep7V4");
+                return new Cloudinary(acc);
+            });
+
+            builder.Services.AddScoped<UnitOfWork>();
 
             var app = builder.Build();
 

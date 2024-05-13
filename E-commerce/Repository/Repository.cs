@@ -34,8 +34,8 @@ namespace E_commerce.Repository
 
         public void Update(T obj)
         {
-            db.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
+           // db.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+           db.Set<T>().Update(obj);
         }
 
         public void Save()

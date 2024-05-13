@@ -4,7 +4,7 @@ namespace E_commerce.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string? UserName { get; set; }
+        //public string? UserName { get; set; }
 
         public string? Gender { get; set; }
 
@@ -19,9 +19,6 @@ namespace E_commerce.Models
         public virtual List<Review>? Reviews { get; set; } = new List<Review>();
                 
         public virtual List<Order>? Orders { get; set; } = new List<Order>();
-
-
-
 
     }
 }

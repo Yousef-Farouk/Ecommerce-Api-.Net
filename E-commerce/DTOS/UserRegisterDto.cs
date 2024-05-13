@@ -1,6 +1,6 @@
 ﻿namespace E_commerce.DTOS
 {
-    public class UserDto
+    public class UserRegisterDto
     {
         public string? UserName {  get; set; }
 

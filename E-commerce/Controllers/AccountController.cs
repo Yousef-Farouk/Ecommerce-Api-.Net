@@ -14,16 +14,16 @@ namespace E_commerce.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
 
-        public AccountController(UserManager<ApplicationUser> _userManager,SignInManager<ApplicationUser>_signInManager)
+        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager)
         {
             userManager = _userManager;
             signInManager = _signInManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(UserDto user)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserRegisterDto user)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
             }
@@ -32,12 +32,11 @@ namespace E_commerce.Controllers
             {
                 UserName = user.UserName,
                 Email = user.Email,
-
             };
 
-            var result = await userManager.CreateAsync(appuser,user.Password);
+            var result = await userManager.CreateAsync(appuser, user.Password);
 
-            if (result.Succeeded) 
+            if (result.Succeeded)
             {
                 return Ok("Registiration Succeeded");
             }
@@ -49,7 +48,28 @@ namespace E_commerce.Controllers
 
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginDto user)
+        {
 
+            if (ModelState.IsValid)
+            {
+                var appuser = await userManager.FindByEmailAsync(user.email);
+                if (appuser != null)
+                {
+                    bool userExists = await userManager.CheckPasswordAsync(appuser, user.password);
+                    if (userExists)
+                    {
+                        await signInManager.SignInAsync(appuser, false);
+                        return Ok("Login succeeded");
+                    }
 
+                }
+
+            }
+
+            return NotFound("user not found");
+
+        }
     }
 }
