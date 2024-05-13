@@ -10,15 +10,16 @@ namespace E_commerce.Models
 
         public string? Image { get; set; }
 
-        public UserAddress? Address { get; set;}
+        public virtual  UserAddress? Address { get; set;}
+          
+        public virtual ShoppingSession? ShoppingSession { get; set;}
+               
+        public virtual List<UserPayment>? UserPayement { get; set; } = new List<UserPayment>();
+               
+        public virtual List<Review>? Reviews { get; set; } = new List<Review>();
+                
+        public virtual List<Order>? Orders { get; set; } = new List<Order>();
 
-        public List<UserPayment>? UserPayement { get; set; } = new List<UserPayment>();
-
-        public List<Review>? Review { get; set; } = new List<Review>();
-
-        public List<Order>? Order { get; set; } = new List<Order>();
-
-        public ShoppingSession? ShoppingSession { get; set;}
 
 
 

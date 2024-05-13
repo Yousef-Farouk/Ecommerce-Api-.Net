@@ -12,15 +12,14 @@ namespace E_commerce.Models
 
         public int? Price {get; set;}
 
-
         [ForeignKey("User")]
-        public int? UserId { get; set; }
+        public string? UserId { get; set; }
 
-        public ApplicationUser? User { get; set; }
+        public virtual ApplicationUser? User { get; set; }
 
-        public UserPayment? Payment { get; set; }
+        public virtual UserPayment? Payment { get; set; }
 
-        public List<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
+        public virtual List<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
 
 
 

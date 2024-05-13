@@ -18,6 +18,8 @@ namespace E_commerce
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
                 options.Password.RequiredLength = 5;
             }).AddEntityFrameworkStores<EcommerceContext>();
 

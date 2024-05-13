@@ -16,22 +16,24 @@ namespace E_commerce.Models
 
         public string? Image {  get; set; }
 
-        public Order? OrderItem { get; set; }
+        public virtual List<Order>? OrderItems { get; set; }
 
 
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }
 
-        public Category? Category { get; set;}
+        public virtual Category? Category { get; set;}
 
 
         [ForeignKey("Coupon")]
         public int? CouponId { get; set; }
 
-        public Coupon? Coupon { get; set; }
+        public virtual Coupon? Coupon { get; set; }
 
 
-        public CartItem? CartItem { get; set; }
+        public virtual List<CartItem>? CartItems { get; set; }
+
+        public virtual List<Review>? Reviews { get; set; } 
 
     }
 }

@@ -15,15 +15,15 @@ namespace E_commerce.Models
 
 
         [ForeignKey("User")]
-        public int? UserId { get; set; }
+        public string? UserId { get; set; }
 
-        public ApplicationUser? User { get; set; }
+        public virtual ApplicationUser? User { get; set; }
 
 
         [ForeignKey("Order")]
         public int? OrderId { get; set; }
 
-        public Order? Order { get; set; }
+        public virtual Order? Order { get; set; }
 
     }
 }

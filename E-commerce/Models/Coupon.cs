@@ -18,7 +18,7 @@ namespace E_commerce.Models
 
         public int? DiscountAmount { get; set; }
 
-        public List<Product> Products { get; set; } = new List<Product>();
+        public virtual List<Product> Products { get; set; } = new List<Product>();
 
 
 
