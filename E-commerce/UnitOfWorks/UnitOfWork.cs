@@ -9,6 +9,7 @@ namespace E_commerce.UnitOfWorks
     {
         EcommerceContext db;
         IProductRepository productRepository;
+        ICategoryRepository categoryRepository;
         private readonly Cloudinary cloudinary;
         
 
@@ -29,6 +30,20 @@ namespace E_commerce.UnitOfWorks
                 }
                 return productRepository;
             } 
+        }
+
+        public ICategoryRepository CategoryRepository
+        {
+            get
+            {
+                if(categoryRepository == null)
+                {
+                    categoryRepository = new CategoryRepository(db);
+                }
+
+                return categoryRepository;
+            }
+
         }
 
         public void SaveChanges()

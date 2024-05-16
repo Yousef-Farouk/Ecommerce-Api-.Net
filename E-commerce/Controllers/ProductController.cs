@@ -26,8 +26,15 @@ namespace E_commerce.Controllers
         public async Task<IActionResult> GetAll()
         {
             var products  = unit.ProductRepository.GetAll();
+
+            if (products == null)
+            {
+                return NotFound();
+            }
+
             var productsDto = products.Select(p => new ProductDto
             {
+                Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Description = p.Description,
@@ -44,8 +51,14 @@ namespace E_commerce.Controllers
         public async Task<IActionResult> GetById(int id)
         {
            var product = unit.ProductRepository.GetById(id);
+
+            if (product == null)
+
+                return NotFound();
+
             var productDto = new ProductDto()
             {
+                Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description,
@@ -151,17 +164,30 @@ namespace E_commerce.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var product = unit.ProductRepository.GetById(id);
+
+            if (unit.ProductRepository.GetById(id) == null)
+                return NotFound();
 
 
+           
+            if (!string.IsNullOrEmpty(product.Image))
+            {
+                    await unit.ProductRepository.DeleteImage(product.Image);
+            }
+            unit.ProductRepository.Delete(id);
+            unit.SaveChanges();
+
+            return Ok(product);
         }
 
-
-
-
+           
 
     }
 
-   
 }

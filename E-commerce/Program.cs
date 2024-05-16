@@ -13,8 +13,18 @@ namespace E_commerce
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var origin = "";
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(origin,
+                    builder =>
+                    {
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyOrigin();
+                    });
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddDbContext<EcommerceContext>(options =>options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("con")));
@@ -38,6 +48,10 @@ namespace E_commerce
 
             builder.Services.AddScoped<UnitOfWork>();
 
+
+
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -51,7 +65,7 @@ namespace E_commerce
 
             app.UseAuthorization();
 
-
+            app.UseCors(origin);
             app.MapControllers();
 
             app.Run();

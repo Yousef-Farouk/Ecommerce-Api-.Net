@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using E_commerce.Models;
+using System.Net;
 using Task.Repository;
 
 namespace E_commerce.Repository
@@ -17,22 +18,29 @@ namespace E_commerce.Repository
 
         public async Task<bool> DeleteImage(string imageUrl)
         {
-   
+
             // Parse the public ID of the image from its URL
             var publicId = GetPublicIdFromImageUrl(imageUrl);
 
-            // Delete the image from Cloudinary
-            var deletionParams = new DeletionParams(publicId);
-            var deletionResult = await cloudinary.DestroyAsync(deletionParams);
+            var folder = "cozastore_Photos";
 
+            var deleteParams = new DelResParams()
+            {
+                PublicIds = new List<string> {  $"{folder}/{publicId}" },
+                Type = "upload",
+                ResourceType = ResourceType.Image
+            };
+
+            //var deletionResult = await cloudinary.DestroyAsync(deletionParams);
+            var deletionResult = cloudinary.DeleteResources(deleteParams);
             // Check if deletion was successful
-            return deletionResult.Result == "ok";
-           
+            return deletionResult.StatusCode == HttpStatusCode.OK;
+
         }
 
         public string GetPublicIdFromImageUrl(string imageUrl)
         {
-           
+
             var publicId = imageUrl.Split("/").Last().Split(".").First();
             return publicId;
         }
@@ -41,3 +49,11 @@ namespace E_commerce.Repository
 
     }
 }
+//var deleteParams = new DelResParams()
+//{
+//    PublicIds = new List<string> { "cozastore_Photos/letdldcrjjj5plzmezzx" },
+//    Type = "upload",
+//    ResourceType = ResourceType.Image
+//};
+//var result = cloudinary.DeleteResources(deleteParams);
+//Console.WriteLine(result.JsonObj);
