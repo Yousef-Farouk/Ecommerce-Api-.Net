@@ -4,23 +4,23 @@ namespace E_commerce.DTOS
 {
     public class ProductDto
     {
-        public int? Id { get; set; }
+        public int? id { get; set; }
 
-        public string? Name { get; set; }
+        public string? name { get; set; }
 
-        public string? Description { get; set; }
+        public string? description { get; set; }
 
-        public int? Quantity { get; set; }
+        public int? quantity { get; set; }
 
-        public int? Price { get; set; }
+        public int? price { get; set; }
 
-        public IFormFile Image { get; set; }
+        public IFormFile? image { get; set; }
 
-        public string? ImageUrl {  get; set; }
+        public string? imageUrl {  get; set; }
 
-        public int? CategoryId { get; set; }
+        public int? categoryId { get; set; }
 
-        public int? CouponId { get; set; }
+        public int? couponId { get; set; }
 
 
     }

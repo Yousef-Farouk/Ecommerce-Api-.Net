@@ -26,7 +26,8 @@ namespace E_commerce.Controllers
         {
             var categories = unit.CategoryRepository.GetAll();
             var categoryDto = categories.Select(c => new CategoryDto
-            {
+            { 
+                Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
             }).ToList();
@@ -46,6 +47,7 @@ namespace E_commerce.Controllers
             }
             var categoryDto = new CategoryDto()
             {
+                Id = category.Id,
                 Name = category.Name,
                 Description = category.Description,
 
@@ -53,6 +55,24 @@ namespace E_commerce.Controllers
 
             return Ok(categoryDto);
         }
+
+        //[HttpGet("{name}")]
+        //public async Task<IActionResult> GetById(string name )
+        //{
+        //    var category = unit.CategoryRepository.GetById(id);
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var categoryDto = new CategoryDto()
+        //    {
+        //        Name = category.Name,
+        //        Description = category.Description,
+
+        //    };
+
+        //    return Ok(categoryDto);
+        //}
 
         // POST api/<CategoryController>
         [HttpPost]

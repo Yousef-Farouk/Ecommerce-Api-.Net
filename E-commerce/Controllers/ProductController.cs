@@ -34,12 +34,13 @@ namespace E_commerce.Controllers
 
             var productsDto = products.Select(p => new ProductDto
             {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Description = p.Description,
-                Quantity = p.Quantity,
-                ImageUrl = p.Image
+                id = p.Id,
+                name = p.Name,
+                price = p.Price,
+                description = p.Description,
+                quantity = p.Quantity,
+                imageUrl = p.Image,
+                categoryId = p.CategoryId,
             }).ToList();
 
 
@@ -58,12 +59,13 @@ namespace E_commerce.Controllers
 
             var productDto = new ProductDto()
             {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description,
-                Quantity = product.Quantity,
-                ImageUrl = product.Image
+                id = product.Id,
+                name = product.Name,
+                price = product.Price,
+                description = product.Description,
+                quantity = product.Quantity,
+                imageUrl = product.Image,
+                categoryId = product.CategoryId
             };
 
             return Ok(productDto);
@@ -81,7 +83,7 @@ namespace E_commerce.Controllers
 
             var uploadparams = new ImageUploadParams
             {
-                File = new FileDescription(productDto.Image.FileName, productDto.Image.OpenReadStream()),
+                File = new FileDescription(productDto.image.FileName, productDto.image.OpenReadStream()),
                 Folder = "cozastore_Photos"
             };
 
@@ -92,16 +94,16 @@ namespace E_commerce.Controllers
                 return BadRequest("Failed to upload image to Cloudinary");
             }
 
-            var imageurl = uploadResult.Uri.ToString();
+            var imageUrl = uploadResult.Uri.ToString();
 
             var product = new Product
             {
-                Name = productDto.Name,
-                Description = productDto.Description,
-                Price = productDto.Price,
-                Quantity = productDto.Quantity,
-                CategoryId = productDto.CategoryId,
-                Image = imageurl
+                Name = productDto.name,
+                Description = productDto.description,
+                Price = productDto.price,
+                Quantity = productDto.quantity,
+                Image = imageUrl
+                //CategoryId = productDto.CategoryId,
             };
 
             unit.ProductRepository.Add(product);
@@ -119,11 +121,13 @@ namespace E_commerce.Controllers
 
             var product = unit.ProductRepository.GetById(id);
 
+           ImageUploadResult uploadResult = null ;
+
             if (unit.ProductRepository.GetById(id) == null)
                 return NotFound();
 
 
-            if (productDto.Image != null)
+            if (productDto.image != null)
             {
 
                 if(!string.IsNullOrEmpty(product.Image))
@@ -133,11 +137,11 @@ namespace E_commerce.Controllers
 
                 var uploadparam = new ImageUploadParams
                 {
-                    File = new FileDescription(productDto.Image.FileName, productDto.Image.OpenReadStream()),
+                    File = new FileDescription(productDto.image.FileName, productDto.image.OpenReadStream()),
                     Folder = "cozastore_Photos"
                 };
 
-                var uploadResult = await cloudinary.UploadAsync(uploadparam);
+                uploadResult = await cloudinary.UploadAsync(uploadparam);
 
 
                 if (uploadResult.Error != null)
@@ -145,19 +149,17 @@ namespace E_commerce.Controllers
                     return BadRequest("Failed to upload image to Cloudinary");
                 }
 
-
-
-                product.Name = productDto.Name;
-                product.Description = productDto.Description;
-                product.Quantity = productDto.Quantity;
-                product.Price = productDto.Price;
-                product.Image = uploadResult.Uri.ToString();
-               
-                unit.ProductRepository.Update(product);
-                unit.SaveChanges();
             }
 
-            return Ok(product);
+            product.Name = productDto.name ?? product.Name;
+            product.Description = productDto.description ?? product.Description;
+            product.Quantity = productDto.quantity ?? product.Quantity;
+            product.Price = productDto.price ?? product.Price;
+            product.Image = uploadResult == null ? product.Image : uploadResult.Uri.ToString();
+            product.CategoryId = productDto.categoryId ?? product.CategoryId;
+            unit.ProductRepository.Update(product);
+            unit.SaveChanges();
+            return Ok(productDto);
 
         }
 
