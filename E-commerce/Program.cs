@@ -2,9 +2,12 @@
 using CloudinaryDotNet;
 using E_commerce.Models;
 using E_commerce.UnitOfWorks;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace E_commerce
 {
@@ -49,6 +52,23 @@ namespace E_commerce
             builder.Services.AddScoped<UnitOfWork>();
 
 
+            builder.Services.AddAuthentication(option => option.DefaultAuthenticateScheme = "myscheme")
+                .AddJwtBearer("myscheme",
+            op =>
+            {
+                string key = "welcome to my secret key yousef farouk";
+                var secertkey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+
+                op.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = Configuration["Jwt:Issuer"],
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+
+
+            });
+                            
 
 
 
