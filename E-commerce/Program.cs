@@ -1,6 +1,7 @@
 
 using CloudinaryDotNet;
 using E_commerce.Models;
+using E_commerce.Services;
 using E_commerce.UnitOfWorks;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,10 @@ namespace E_commerce
         {
             var builder = WebApplication.CreateBuilder(args);
             var origin = "";
+
+            builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChange:true);
+
+            var configuration = builder.Configuration;
             // Add services to the container.
             builder.Services.AddCors(options =>
             {
@@ -39,8 +44,6 @@ namespace E_commerce
                 options.Password.RequiredLength = 5;
             }).AddEntityFrameworkStores<EcommerceContext>();
 
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<Cloudinary>((provider) =>
@@ -49,25 +52,28 @@ namespace E_commerce
                 return new Cloudinary(acc);
             });
 
+
+
             builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddScoped<AccountService>();
 
 
             builder.Services.AddAuthentication(option => option.DefaultAuthenticateScheme = "myscheme")
                 .AddJwtBearer("myscheme",
             op =>
             {
-                string key = "welcome to my secret key yousef farouk";
+                var key = configuration["Jwt:SecretKey"];
                 var secertkey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
 
                 op.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    IssuerSigningKey = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = secertkey,
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-
-
             });
+
+
                             
 
 

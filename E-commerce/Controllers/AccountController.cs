@@ -1,5 +1,6 @@
 ﻿using E_commerce.DTOS;
 using E_commerce.Models;
+using E_commerce.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,39 +12,29 @@ namespace E_commerce.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly AccountService accountService;
 
-        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager)
+        public AccountController(AccountService _accountService)
         {
-            userManager = _userManager;
-            signInManager = _signInManager;
+            accountService = _accountService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto user)
         {
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var appuser = new ApplicationUser()
+            try
             {
-                UserName = user.UserName,
-                Email = user.Email,
-            };
-
-            var result = await userManager.CreateAsync(appuser, user.Password);
-
-            if (result.Succeeded)
-            {
-                return Ok("Registiration Succeeded");
+                var token = await accountService.RegisterAsync(user);
+                return Ok(new { Token = token });
             }
-
-            else
+            catch (Exception ex)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -52,23 +43,32 @@ namespace E_commerce.Controllers
         public async Task<IActionResult> Login(UserLoginDto user)
         {
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var appuser = await userManager.FindByEmailAsync(user.email);
-                if (appuser != null)
-                {
-                    bool userExists = await userManager.CheckPasswordAsync(appuser, user.password);
-                    if (userExists)
-                    {
-                        await signInManager.SignInAsync(appuser, false);
-                        return Ok("Login succeeded");
-                    }
-
-                }
+                
+                return BadRequest(ModelState);
 
             }
+            try
+            {
+                var token = await accountService.LoginAsync(user);
 
-            return NotFound("user not found");
+                return Ok(new { Token = token });
+            }
+
+            catch (UnauthorizedAccessException ex) 
+            {
+                return Unauthorized(ex.Message);
+            
+            }
+
+            catch(Exception ex) 
+            { 
+                return BadRequest(ex.Message);
+            
+            }
+
+
 
         }
     }
