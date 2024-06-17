@@ -61,19 +61,21 @@ namespace E_commerce.Services
         private string GenerateJwtToken(ApplicationUser appUser)
         {
             var key = Encoding.ASCII.GetBytes(Configuration["Jwt:SecretKey"]);
+            var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Email, appUser.Email)
+                    new Claim(ClaimTypes.NameIdentifier, appUser.Id),
+                    new Claim(ClaimTypes.Email, appUser.Email),
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
             
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenHandler.WriteToken(token);
         }
 
 

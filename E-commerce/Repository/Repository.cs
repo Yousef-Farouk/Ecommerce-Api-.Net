@@ -5,7 +5,7 @@ namespace E_commerce.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly EcommerceContext db;
+        protected readonly EcommerceContext db;
 
         public Repository(EcommerceContext _db)
         {

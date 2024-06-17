@@ -1,4 +1,5 @@
 
+using AutoMapper;
 using CloudinaryDotNet;
 using E_commerce.Models;
 using E_commerce.Services;
@@ -56,7 +57,8 @@ namespace E_commerce
 
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<AccountService>();
-
+            builder.Services.AddAutoMapper(typeof(MapingProfile));
+            builder.Services.AddScoped<ReviewService>();
 
             builder.Services.AddAuthentication(option => option.DefaultAuthenticateScheme = "myscheme")
                 .AddJwtBearer("myscheme",

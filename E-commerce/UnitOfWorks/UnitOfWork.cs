@@ -1,4 +1,5 @@
-﻿using CloudinaryDotNet;
+﻿using AutoMapper;
+using CloudinaryDotNet;
 using E_commerce.Models;
 using E_commerce.Repository;
 using Task.Repository;
@@ -11,14 +12,16 @@ namespace E_commerce.UnitOfWorks
         IProductRepository productRepository;
         ICategoryRepository categoryRepository;
         IAccountRepository accountRepository;
-
+        IReviewRepository reviewRepository;
         private readonly Cloudinary cloudinary;
-        
+        private readonly IMapper mapper;
 
-        public UnitOfWork(EcommerceContext _db,Cloudinary _cloudinary)
+        public UnitOfWork(EcommerceContext _db,Cloudinary _cloudinary,IMapper _mapper)
         {
             db = _db;
             cloudinary = _cloudinary;
+            mapper = _mapper;
+            mapper = _mapper;
         }
 
 
@@ -58,6 +61,20 @@ namespace E_commerce.UnitOfWorks
                 }
 
                 return accountRepository;
+            }
+
+        }
+
+        public IReviewRepository ReviewRepository
+        {
+            get
+            {
+                if (reviewRepository == null)
+                {
+                    reviewRepository = new ReviewRepository(db,mapper);
+                }
+
+                return reviewRepository;
             }
 
         }
