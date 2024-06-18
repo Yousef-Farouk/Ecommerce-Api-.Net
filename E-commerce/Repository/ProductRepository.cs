@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using E_commerce.Models;
+using E_commerce.UnitOfWorks;
 using System.Net;
 using Task.Repository;
 
@@ -43,6 +44,12 @@ namespace E_commerce.Repository
 
             var publicId = imageUrl.Split("/").Last().Split(".").First();
             return publicId;
+        }
+
+        public List<Product> GetProductsByCategoy(string categroy) 
+        { 
+            return  db.Products.Where(p=>p.Category.Name == categroy).ToList();
+        
         }
 
 

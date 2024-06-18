@@ -8,5 +8,7 @@ namespace Task.Repository
         public Task<bool> DeleteImage(string imageUrl);
 
         string GetPublicIdFromImageUrl(string imageUrl);
+
+        public List<Product> GetProductsByCategoy(string categroy);
     }
 }

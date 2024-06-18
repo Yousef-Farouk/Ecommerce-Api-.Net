@@ -29,7 +29,7 @@ namespace E_commerce.Services
                     throw new UnauthorizedAccessException("Invalid credentials");
                 }
 
-            return GenerateJwtToken(appuser);
+            return await GenerateJwtToken(appuser);
 
         }
 
@@ -55,20 +55,32 @@ namespace E_commerce.Services
                 throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
             }
 
-            return GenerateJwtToken(appUser);
+            await userManager.AddToRoleAsync(appUser, "customer"); 
+            return await GenerateJwtToken(appUser);
         }
 
-        private string GenerateJwtToken(ApplicationUser appUser)
+        private  async Task<string> GenerateJwtToken(ApplicationUser appUser)
         {
             var key = Encoding.ASCII.GetBytes(Configuration["Jwt:SecretKey"]);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var userRoles = await userManager.GetRolesAsync(appUser);
+            var claims = new List<Claim>
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, appUser.Id),
-                    new Claim(ClaimTypes.Email, appUser.Email),
-                }),
+                new Claim(ClaimTypes.NameIdentifier, appUser.Id),
+                new Claim(ClaimTypes.Email, appUser.Email),
+                new Claim(ClaimTypes.GivenName,appUser.UserName),
+               // new Claim(ClaimTypes.Upn,appUser.Image),
+            };
+
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+
+            {
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

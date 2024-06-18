@@ -15,8 +15,8 @@ namespace E_commerce.Services
             .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.User.Id));
 
             CreateMap<ReviewDto, Review>();
-             
 
+            CreateMap<Product, ProductDto>();
         }
     }
 }

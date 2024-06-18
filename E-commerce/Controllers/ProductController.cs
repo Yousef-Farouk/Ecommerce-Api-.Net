@@ -1,4 +1,5 @@
-﻿using CloudinaryDotNet;
+﻿using AutoMapper;
+using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using E_commerce.DTOS;
 using E_commerce.Models;
@@ -15,17 +16,19 @@ namespace E_commerce.Controllers
     {
         private readonly Cloudinary cloudinary;
         private readonly UnitOfWork unit;
+        private readonly IMapper mapper;
 
-        public ProductController(Cloudinary _cloudinary , UnitOfWork _unit)
+        public ProductController(Cloudinary _cloudinary , UnitOfWork _unit,IMapper _mapper)
         {
             cloudinary = _cloudinary;
             unit = _unit;
+            mapper = _mapper;
         }
         // GET: api/<ProductController>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var products  = unit.ProductRepository.GetAll();
+            var products = unit.ProductRepository.GetAll();
 
             if (products == null)
             {
@@ -48,7 +51,7 @@ namespace E_commerce.Controllers
         }
 
         // GET api/<ProductController>/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
            var product = unit.ProductRepository.GetById(id);
@@ -70,6 +73,33 @@ namespace E_commerce.Controllers
 
             return Ok(productDto);
         }
+
+
+        //[HttpGet("category/{category}")]
+        [HttpGet("{category:alpha}")]
+        public async Task<IActionResult> GetByCategoy(string category)
+        {
+            var products = unit.ProductRepository.GetProductsByCategoy(category);
+
+            if (products == null)
+
+                return NotFound();
+
+            var productsDto = products.Select(p => new ProductDto
+            {
+                id = p.Id,
+                name = p.Name,
+                price = p.Price,
+                description = p.Description,
+                quantity = p.Quantity,
+                imageUrl = p.Image,
+                categoryId = p.CategoryId,
+            }).ToList();
+
+            return Ok(productsDto);
+        }
+
+
 
         // POST api/<ProductController>
         [HttpPost]
