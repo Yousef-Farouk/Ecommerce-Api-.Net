@@ -13,14 +13,17 @@ namespace E_commerce.UnitOfWorks
         ICategoryRepository categoryRepository;
         IAccountRepository accountRepository;
         IReviewRepository reviewRepository;
+        ICartRepository cartRepository;
+
         private readonly Cloudinary cloudinary;
         private readonly IMapper mapper;
+
+
 
         public UnitOfWork(EcommerceContext _db,Cloudinary _cloudinary,IMapper _mapper)
         {
             db = _db;
             cloudinary = _cloudinary;
-            mapper = _mapper;
             mapper = _mapper;
         }
 
@@ -75,6 +78,20 @@ namespace E_commerce.UnitOfWorks
                 }
 
                 return reviewRepository;
+            }
+
+        }
+
+        public ICartRepository CartRepository
+        {
+            get
+            {
+                if (cartRepository == null)
+                {
+                    cartRepository = new CartRepository(db);
+                }
+
+                return cartRepository;
             }
 
         }

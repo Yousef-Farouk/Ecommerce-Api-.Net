@@ -20,5 +20,7 @@ namespace E_commerce.Models
                 
         public virtual List<Order>? Orders { get; set; } = new List<Order>();
 
+        public virtual Cart Cart { get; set; }
+
     }
 }

@@ -17,6 +17,13 @@ namespace E_commerce.Services
             CreateMap<ReviewDto, Review>();
 
             CreateMap<Product, ProductDto>();
+
+            CreateMap<Cart, CartDto>()
+            .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.CartItems));
+
+            CreateMap<CartItem, CartItemDto>()
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price)); ;
         }
     }
 }

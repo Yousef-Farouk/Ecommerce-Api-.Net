@@ -59,6 +59,7 @@ namespace E_commerce
             builder.Services.AddScoped<AccountService>();
             builder.Services.AddAutoMapper(typeof(MapingProfile));
             builder.Services.AddScoped<ReviewService>();
+            builder.Services.AddScoped<CartService>();
 
             builder.Services.AddAuthentication(option => option.DefaultAuthenticateScheme = "myscheme")
                 .AddJwtBearer("myscheme",
