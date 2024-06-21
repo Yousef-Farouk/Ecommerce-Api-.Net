@@ -66,6 +66,28 @@ namespace E_commerce.Services
             unit.SaveChanges();
         }
 
+        public void DeleteProductFromCart(string userId ,int ProductId)
+        {
+            var cart = unit.CartRepository.GetCartByUserId(userId);
+
+            if (cart == null)
+            {
+                throw new Exception("Cart not found");
+
+            }
+
+            var CartItem = cart.CartItems.FirstOrDefault(ct=>ct.ProductId == ProductId);
+            if (CartItem == null)
+            {
+                throw new Exception("Product not found in cart");
+            }
+
+            //cart.CartItems.Remove(CartItem);
+            unit.CartItemRepository.Delete(CartItem);
+            unit.CartRepository.Update(cart);
+            unit.SaveChanges();
+
+        }
 
 
 

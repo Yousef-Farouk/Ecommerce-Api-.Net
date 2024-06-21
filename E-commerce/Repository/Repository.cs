@@ -20,6 +20,12 @@ namespace E_commerce.Repository
         {
             var obj = db.Set<T>().Find(id);
             db.Set<T>().Remove(obj);
+
+        }
+
+        public void Delete(T obj)
+        {
+            db.Set<T>().Remove(obj);
         }
 
         public List<T> GetAll()
