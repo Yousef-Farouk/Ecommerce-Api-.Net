@@ -24,7 +24,13 @@ namespace E_commerce.Services
             CreateMap<CartItem, CartItemDto>()
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
-            .ForMember(dest => dest.ProductImage, opt => opt.MapFrom(src => src.Product.Image));
+            .ForMember(dest => dest.ProductImage, opt => opt.MapFrom(src => src.Product.Image))
+            .ForMember(dest => dest.InStock, opt => opt.MapFrom(src => src.Product.Quantity));
+
+
+            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
+
         }
     }
 }

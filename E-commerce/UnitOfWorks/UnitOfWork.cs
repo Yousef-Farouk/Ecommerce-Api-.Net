@@ -15,6 +15,7 @@ namespace E_commerce.UnitOfWorks
         IReviewRepository reviewRepository;
         ICartRepository cartRepository;
         ICartItemRepository cartItemRepository;
+        IOrderRepository orderRepository;
         private readonly Cloudinary cloudinary;
         private readonly IMapper mapper;
 
@@ -106,6 +107,20 @@ namespace E_commerce.UnitOfWorks
                 }
 
                 return cartItemRepository;
+            }
+
+        }
+
+        public IOrderRepository OrderRepository
+        {
+            get
+            {
+                if (orderRepository == null)
+                {
+                    orderRepository = new OrderRepository(db);
+                }
+
+                return orderRepository;
             }
 
         }
